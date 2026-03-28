@@ -2,7 +2,7 @@
    ESP32 LED CONTROL DASHBOARD — app.js
    ═══════════════════════════════════════════ */
 
-// ── SUPABASE CONFIG (edit these two values) ──────────────────────
+// ── SUPABASE CONFIG (edit these two values) ─────────────────────
 const SB_URL     = "https://smjagmrdwkjdstipxfvd.supabase.co";
 const SB_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtamFnbXJkd2tqZHN0aXB4ZnZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTM4NzcsImV4cCI6MjA5MDE2OTg3N30.77N8ecwRidtqJ4kw0q9BrGzltpoOKJl5wnxKsNgY-fU";
 // ─────────────────────────────────────────────────────────────────
