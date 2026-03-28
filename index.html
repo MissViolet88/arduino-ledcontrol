@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ESP32 · Lumina Control</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- AMBIENT BACKGROUND BLOBS -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="layout">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-mark">✦</span>
+        <div>
+          <div class="logo-title">Lumina</div>
+          <div class="logo-sub">ESP32 Control</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <div class="nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span>Schedule</span>
+        </div>
+        <div class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+          <span>Signals</span>
+        </div>
+      </nav>
+
+      <!-- ESP32 CONNECTION PANEL -->
+      <div class="esp-panel" id="esp-panel">
+        <div class="esp-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2M12 12v4M10 14h4"/></svg>
+          <span>Device</span>
+        </div>
+        <div class="esp-status" id="esp-status">
+          <div class="esp-dot" id="esp-dot"></div>
+          <div>
+            <div class="esp-label" id="esp-label">Searching…</div>
+            <div class="esp-sub" id="esp-sub">ESP32 not detected</div>
+          </div>
+        </div>
+        <div class="esp-meta">
+          <div class="esp-row"><span>Last ping</span><span id="esp-ping">—</span></div>
+          <div class="esp-row"><span>Uptime</span><span id="esp-uptime">—</span></div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="session-time" id="s-up">00:00:00</div>
+        <div class="session-label">session</div>
+      </div>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+
+      <!-- TOP BAR -->
+      <div class="topbar">
+        <div class="page-title">
+          <h1>Light Control</h1>
+          <p>Manage your ESP32 GPIO outputs</p>
+        </div>
+        <div class="dashboard-status" id="db-status">
+          <div class="status-ring" id="status-ring"></div>
+          <div>
+            <div class="status-text" id="status-text">Connecting…</div>
+            <div class="status-sub">Supabase channel</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LED CARDS -->
+      <div class="cards">
+
+        <!-- BLUE LED -->
+        <div class="card" id="card-blue">
+          <div class="card-glow card-glow-blue"></div>
+          <div class="card-inner">
+            <div class="card-head">
+              <div class="pin-tag">GPIO 2 · D2</div>
+              <div class="led-orb" id="orb-blue">
+                <div class="orb-core"></div>
+                <div class="orb-ring r1"></div>
+                <div class="orb-ring r2"></div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="led-title">
+                <h2>Blue <em>LED</em></h2>
+                <div class="led-type">Built-in · D2</div>
+              </div>
+
+              <div class="power-toggle">
+                <span class="tog-label" id="blue-state-label">Off</span>
+                <button class="tog-btn" id="tog-blue" onclick="handleToggle('blue')" role="switch" aria-checked="false">
+                  <span class="tog-knob"></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-controls">
+              <div class="ctrl-row">
+                <div class="ctrl-label">Mode</div>
+                <div class="mode-pills">
+                  <button class="pill active" id="blue-solid" onclick="setMode('blue','solid')">Solid</button>
+                  <button class="pill" id="blue-blink" onclick="setMode('blue','blink')">Blink</button>
+                </div>
+              </div>
+              <div class="ctrl-row speed-row" id="blue-speed-row">
+                <div class="ctrl-label">Speed <span class="speed-readout" id="blue-hz">1 Hz</span></div>
+                <input type="range" class="speed-slider" id="blue-spd"
+                       min="1" max="10" value="1" disabled
+                       oninput="handleSpeed('blue', this.value)"/>
+                <div class="tick-row"><span>Slow</span><span>Fast</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RED LED -->
+        <div class="card" id="card-red">
+          <div class="card-glow card-glow-red"></div>
+          <div class="card-inner">
+            <div class="card-head">
+              <div class="pin-tag">GPIO 4 · D4</div>
+              <div class="led-orb" id="orb-red">
+                <div class="orb-core"></div>
+                <div class="orb-ring r1"></div>
+                <div class="orb-ring r2"></div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="led-title">
+                <h2>Red <em>LED</em></h2>
+                <div class="led-type">External · D4</div>
+              </div>
+
+              <div class="power-toggle">
+                <span class="tog-label" id="red-state-label">Off</span>
+                <button class="tog-btn" id="tog-red" onclick="handleToggle('red')" role="switch" aria-checked="false">
+                  <span class="tog-knob"></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-controls">
+              <div class="ctrl-row">
+                <div class="ctrl-label">Mode</div>
+                <div class="mode-pills">
+                  <button class="pill active" id="red-solid" onclick="setMode('red','solid')">Solid</button>
+                  <button class="pill" id="red-blink" onclick="setMode('red','blink')">Blink</button>
+                </div>
+              </div>
+              <div class="ctrl-row speed-row" id="red-speed-row">
+                <div class="ctrl-label">Speed <span class="speed-readout" id="red-hz">1 Hz</span></div>
+                <input type="range" class="speed-slider" id="red-spd"
+                       min="1" max="10" value="1" disabled
+                       oninput="handleSpeed('red', this.value)"/>
+                <div class="tick-row"><span>Slow</span><span>Fast</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- STATUS STRIP -->
+      <div class="strip">
+        <div class="strip-item">
+          <div class="strip-val" id="s-blue-state">Off</div>
+          <div class="strip-key">Blue State</div>
+        </div>
+        <div class="strip-divider"></div>
+        <div class="strip-item">
+          <div class="strip-val" id="s-red-state">Off</div>
+          <div class="strip-key">Red State</div>
+        </div>
+        <div class="strip-divider"></div>
+        <div class="strip-item">
+          <div class="strip-val" id="s-blue-mode">Solid</div>
+          <div class="strip-key">Blue Mode</div>
+        </div>
+        <div class="strip-divider"></div>
+        <div class="strip-item">
+          <div class="strip-val" id="s-red-mode">Solid</div>
+          <div class="strip-key">Red Mode</div>
+        </div>
+        <div class="strip-divider"></div>
+        <div class="strip-item">
+          <div class="strip-val" id="s-blue-hz">—</div>
+          <div class="strip-key">Blue Speed</div>
+        </div>
+        <div class="strip-divider"></div>
+        <div class="strip-item">
+          <div class="strip-val" id="s-red-hz">—</div>
+          <div class="strip-key">Red Speed</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
